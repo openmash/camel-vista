@@ -30,6 +30,17 @@
   <description>VistA integration components via Apache Camel</description>
 
   <properties>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <camel.version>2.10.4</camel.version>
+    <netty.version>3.6.6.Final</netty.version>
+    <slf4j.version>1.7.2</slf4j.version>
+    <junit.version>4.11</junit.version>
+
+    <maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
+    <maven-bundle-plugin.version>2.1.0</maven-bundle-plugin.version>
+    <exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
+    <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
   </properties>
    
   <modules>
@@ -41,27 +52,27 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-	<groupId>org.apache.camel</groupId>
-	<artifactId>camel-core</artifactId>
-	<version>${camel.version}</version>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-core</artifactId>
+        <version>${camel.version}</version>
       </dependency>
 
       <!-- logging -->
       <dependency>
-	<groupId>org.slf4j</groupId>
-	<artifactId>slf4j-log4j12</artifactId>
-	<version>${slf4j.version}</version>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${slf4j.version}</version>
       </dependency>
       <dependency>
-	<groupId>log4j</groupId>
-	<artifactId>log4j</artifactId>
-	<version>${log4j.version}</version>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>${log4j.version}</version>
       </dependency>
 
       <dependency>
-	<groupId>junit</groupId>
-	<artifactId>junit</artifactId>
-	<version>${junit.version}</version>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -69,32 +80,34 @@
   <build>
     <pluginManagement>
       <plugins>
-	<plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
-	  <artifactId>maven-compiler-plugin</artifactId>
-	  <configuration>
-	    <source>1.6</source>
-	    <target>1.6</target>
-	  </configuration>
-	</plugin>
-	<plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
-	  <artifactId>maven-eclipse-plugin</artifactId>
-	  <configuration>
-	    <downloadSources>true</downloadSources>
-	  </configuration>
-	</plugin>
-	<plugin>
-	  <groupId>org.apache.felix</groupId>
-	  <artifactId>maven-bundle-plugin</artifactId>
-	  <version>2.1.0</version>
-	  <extensions>true</extensions>
-	</plugin>
-	<plugin>
-	  <groupId>org.codehaus.mojo</groupId>
-	  <artifactId>exec-maven-plugin</artifactId>
-	  <version>1.2</version>
-	</plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <version>${maven-eclipse-plugin.version}</version>
+          <configuration>
+            <downloadSources>true</downloadSources>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>${maven-bundle-plugin.version}</version>
+          <extensions>true</extensions>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>${exec-maven-plugin.version}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>
