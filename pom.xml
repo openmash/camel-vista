@@ -45,8 +45,8 @@
    
   <modules>
     <module>api</module>
-    <!-- module>rpc</module>
-    <module>war</module -->
+    <module>rpc</module>
+    <!-- module>war</module -->
   </modules>
 
   <dependencyManagement>
