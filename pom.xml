@@ -33,8 +33,8 @@
   </properties>
    
   <modules>
-    <!-- module>common</module>
-    <module>server</module>
+    <module>api</module>
+    <!-- module>rpc</module>
     <module>war</module -->
   </modules>
 
