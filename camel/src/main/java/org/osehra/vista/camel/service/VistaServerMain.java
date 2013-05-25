@@ -14,25 +14,12 @@
  * limitations under the License.
  */
 
-package org.osehra.vista.camel.api;
+package org.osehra.vista.camel.service;
 
 
-public final class GlobalParameter implements Parameter {
-    private final String key;
-    private final String value;
+public class VistaServerMain {
 
-    public GlobalParameter(String key, String value) {
-        this.key = key;
-        this.value = value;
+    public static void main(String[] args) throws Exception {
     }
 
-    public String getKey() {
-        return key;
-    }
-    
-    public String getValue() {
-        return value;
-    }
-    
 }
-

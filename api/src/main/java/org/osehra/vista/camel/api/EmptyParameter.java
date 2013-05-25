@@ -20,3 +20,4 @@ package org.osehra.vista.camel.api;
 public final class EmptyParameter implements Parameter {
     
 }
+

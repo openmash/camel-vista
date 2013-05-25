@@ -49,12 +49,19 @@
   <modules>
     <module>api</module>
     <module>rpc</module>
+    <module>camel</module>
     <!-- module>war</module -->
     <module>features</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.osehra.vista.camel</groupId>
+        <artifactId>vista-rpc</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-core</artifactId>
