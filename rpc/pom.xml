@@ -39,6 +39,10 @@
       </dependency>
 
       <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+      </dependency>
+      <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty</artifactId>
       </dependency>
@@ -56,8 +60,26 @@
           </instructions>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>${target.main.class}</mainClass>
+          <includePluginDependencies>false</includePluginDependencies>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>run-server</id>
+      <properties>
+        <!-- Running Mock Vista RPC server -->
+        <target.main.class>org.osehra.vista.camel.rpc.service.VistaServerMain</target.main.class>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>
 
