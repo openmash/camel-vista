@@ -58,7 +58,22 @@
     <dependencies>
       <dependency>
         <groupId>org.osehra.vista.camel</groupId>
+        <artifactId>vista-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osehra.vista.camel</groupId>
         <artifactId>vista-rpc</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osehra.vista.camel</groupId>
+        <artifactId>vista-camel</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osehra.vista.camel</groupId>
+        <artifactId>vista-osgi</artifactId>
         <version>${project.version}</version>
       </dependency>
 
