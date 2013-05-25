@@ -32,5 +32,11 @@
     <bundle>mvn:org.osehra.vista.camel/vista-rpc/${project.version}</bundle>
   </feature>
 
+  <feature name='vista-camel' version='${project.version}' resolver='(obr)'>
+    <feature version="${project.version}">vista-rpc</feature>
+    
+    <bundle>mvn:org.osehra.vista.camel/vista-camel/${project.version}</bundle>
+  </feature>
+
 </features>
 
