@@ -37,9 +37,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class RpcMessageDecoder extends ReplayingDecoder<RpcMessageDecoder.State> {
+public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State> {
 
-    private final static Logger LOG = LoggerFactory.getLogger(RpcMessageDecoder.class);
+    private final static Logger LOG = LoggerFactory.getLogger(RpcRequestDecoder.class);
 
     private String namespace;
     private String code;
@@ -47,7 +47,7 @@ public class RpcMessageDecoder extends ReplayingDecoder<RpcMessageDecoder.State>
     private String name;
     private List<Parameter> params = new ArrayList<Parameter>();
 
-    public RpcMessageDecoder() {
+    public RpcRequestDecoder() {
         super(State.READ_NS);
     }
 
@@ -161,7 +161,7 @@ public class RpcMessageDecoder extends ReplayingDecoder<RpcMessageDecoder.State>
         }
 
         ctx.getPipeline().remove(this);
-        return new RpcMessage().setName(name);
+        return new RpcRequest().setName(name);
     }
 
     private String readPackedParam(ChannelBuffer buffer) {

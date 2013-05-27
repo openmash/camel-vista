@@ -30,8 +30,8 @@ public class RpcServerPipelineFactory implements ChannelPipelineFactory {
 
         ChannelPipeline pipeline = Channels.pipeline();
         pipeline.addLast("logger", new LoggingHandler(InternalLogLevel.DEBUG));
-        pipeline.addLast("decoder", new RpcMessageDecoder());
-        pipeline.addLast("encoder", new RpcMessageEncoder());
+        pipeline.addLast("decoder", new RpcRequestDecoder());
+        pipeline.addLast("encoder", new RpcRequestEncoder());
         pipeline.addLast("handler", new RpcServerHandler());
 
         return pipeline;

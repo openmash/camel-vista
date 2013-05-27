@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package org.osehra.vista.camel.rpc;
+package org.osehra.vista.camel.rpc.service;
 
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
-public class RpcMessageEncoder extends OneToOneEncoder {
+public class VistaClientMain {
+    private final static Logger LOG = LoggerFactory.getLogger(VistaClientMain.class);
+    private static final VistaClientMain INSTANCE = new VistaClientMain();
 
-    @Override
-    protected Object encode(ChannelHandlerContext ctx, Channel channel, Object msg) throws Exception {
-        return null;
+    public static void main(String... args) {
     }
-}
 
+}
