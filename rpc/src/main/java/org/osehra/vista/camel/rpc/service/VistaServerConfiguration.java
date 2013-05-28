@@ -26,105 +26,105 @@ import java.util.Properties;
 
 public class VistaServerConfiguration {
 
-	public static final String ENV_CONFIG_DIR = "VISTARPC_CONFIG_DIR";
-	public static final String ENV_CONFIG_FILE = "vistarpc.properties";
+    public static final String ENV_CONFIG_DIR = "VISTARPC_CONFIG_DIR";
+    public static final String ENV_CONFIG_FILE = "vistarpc.properties";
 
-	public static final String KEY_HOST = "vista.host";
-	public static final String KEY_PORT = "vista.port";
-	public static final String KEY_ACCESS = "vista.accesscode";
-	public static final String KEY_VERIFY = "vista.verifycode";
-	public static final String DEF_HOST = "localhost";
-	public static final String DEF_PORT = "9220";
-	public static final String DEF_ACCESS = "secret";
-	public static final String DEF_VERIFY = "secret.";
-	
-	public static void loadConfiguration(VistaServerConfiguration cfg, InputStream is) {
-		if (is != null) {
-	        try {
-				Properties props = new Properties();
-				props.load(is);
-				
-				cfg.setHost(props.getProperty(KEY_HOST));
-				cfg.setPort(props.getProperty(KEY_PORT));
-				cfg.setAccess(props.getProperty(KEY_ACCESS));
-				cfg.setVerify(props.getProperty(KEY_VERIFY));
-				
-				is.close();
-			} catch (IOException e) {
-				// ignore, leave unmodified
-				// TODO: log maybe?
-			}
-		}
-	}
-	public static VistaServerConfiguration instance() {
-		return INSTANCE;
-	}
-	private static VistaServerConfiguration INSTANCE;
-	
+    public static final String KEY_HOST = "vista.host";
+    public static final String KEY_PORT = "vista.port";
+    public static final String KEY_ACCESS = "vista.accesscode";
+    public static final String KEY_VERIFY = "vista.verifycode";
+    public static final String DEF_HOST = "localhost";
+    public static final String DEF_PORT = "9220";
+    public static final String DEF_ACCESS = "secret";
+    public static final String DEF_VERIFY = "secret.";
+    
+    public static void loadConfiguration(VistaServerConfiguration cfg, InputStream is) {
+        if (is != null) {
+            try {
+                Properties props = new Properties();
+                props.load(is);
+                
+                cfg.setHost(props.getProperty(KEY_HOST));
+                cfg.setPort(props.getProperty(KEY_PORT));
+                cfg.setAccess(props.getProperty(KEY_ACCESS));
+                cfg.setVerify(props.getProperty(KEY_VERIFY));
+                
+                is.close();
+            } catch (IOException e) {
+                // ignore, leave unmodified
+                // TODO: log maybe?
+            }
+        }
+    }
+    public static VistaServerConfiguration instance() {
+        return INSTANCE;
+    }
+    private static VistaServerConfiguration INSTANCE;
+    
     static {
-		VistaServerConfiguration cfg = new VistaServerConfiguration();  // default configuration;
-		InputStream is = null;
+        VistaServerConfiguration cfg = new VistaServerConfiguration();  // default configuration;
+        InputStream is = null;
         try {
-        	String configDir = System.getenv(ENV_CONFIG_DIR);
-        	// override configuration using a local file
-        	File localFile = new File(".", ENV_CONFIG_FILE + ".local");
-        	File configFile = configDir != null ? new File(configDir, ENV_CONFIG_FILE) :
-    			localFile.exists() ? localFile : new File(".", ENV_CONFIG_FILE);
-			is = configFile.exists() ? new FileInputStream(configFile) :
-			    VistaServerConfiguration.class.getClassLoader().getResourceAsStream(ENV_CONFIG_FILE);
+            String configDir = System.getenv(ENV_CONFIG_DIR);
+            // override configuration using a local file
+            File localFile = new File(".", ENV_CONFIG_FILE + ".local");
+            File configFile = configDir != null ? new File(configDir, ENV_CONFIG_FILE) :
+                localFile.exists() ? localFile : new File(".", ENV_CONFIG_FILE);
+            is = configFile.exists() ? new FileInputStream(configFile) :
+                VistaServerConfiguration.class.getClassLoader().getResourceAsStream(ENV_CONFIG_FILE);
 
-			loadConfiguration(cfg, is);
+            loadConfiguration(cfg, is);
 
         } catch (FileNotFoundException e) {
-			// ignore: should not happen, already checked if configFile.exists()
-		}
+            // ignore: should not happen, already checked if configFile.exists()
+        }
         
-		INSTANCE = cfg;
+        INSTANCE = cfg;
     }
 
-	private String host = DEF_HOST;
-	private int port = Integer.valueOf(DEF_PORT);
-	private String access = DEF_ACCESS;
-	private String verify = DEF_VERIFY;
+    private String host = DEF_HOST;
+    private int port = Integer.valueOf(DEF_PORT);
+    private String access = DEF_ACCESS;
+    private String verify = DEF_VERIFY;
 
-	public String getHost() {
-		return host;
-	}
-	public void setHost(String host) {
-		if (host != null) {
-			this.host = host;
-		}
-	}
+    public String getHost() {
+        return host;
+    }
+    public void setHost(String host) {
+        if (host != null) {
+            this.host = host;
+        }
+    }
 
-	public int getPort() {
-		return port;
-	}
-	public void setPort(int port) {
-		this.port = port;
-	}
-	public void setPort(String port) {
-		if (port != null) {
-			this.port = Integer.valueOf(port);
-		}
-	}
+    public int getPort() {
+        return port;
+    }
+    public void setPort(int port) {
+        this.port = port;
+    }
+    public void setPort(String port) {
+        if (port != null) {
+            this.port = Integer.valueOf(port);
+        }
+    }
 
-	public String getAccess() {
-		return access;
-	}
-	public void setAccess(String access) {
-		if (access != null) {
-			this.access = access;
-		}
-	}
+    public String getAccess() {
+        return access;
+    }
+    public void setAccess(String access) {
+        if (access != null) {
+            this.access = access;
+        }
+    }
 
-	public String getVerify() {
-		return verify;
-	}
-	public void setVerify(String verify) {
-		if (verify != null) {
-			this.verify = verify;
-		}
-	}
+    public String getVerify() {
+        return verify;
+    }
+    public void setVerify(String verify) {
+        if (verify != null) {
+            this.verify = verify;
+        }
+    }
 
 }
 

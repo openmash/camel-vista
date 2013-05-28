@@ -27,54 +27,60 @@ import org.osehra.vista.camel.rpc.RpcRequest;
 
 public class RpcCommandsSupport {
 
-	public static RpcRequest connect() {
-	    return request()
-	    	.code("10304")
-	    	.version(null)
-	    	.name("TCPConnect")
-	    	.parameter(literal("localhost"))
-	    	.parameter(literal("0"))
-	    	.parameter(literal("localhost"));	
-	}
-	public static RpcRequest disconnect() {
-	    return request()
-	    	.code("10304")
-	    	.version(null)
-	    	.name("#BYE#");	
-	}
-	public static RpcRequest login(String access, String verify) {
-		StringBuffer av = new StringBuffer()
+    public static RpcRequest connect() {
+        // TODO: use computed vs hardcoded defaults
+        return connect("120.0.0.1", "localhost");
+    }
+    public static RpcRequest connect(String ipaddress, String hostname) {
+        return request()
+            .code("10304")
+            .version(null)
+            .name("TCPConnect")
+            .parameter(literal(ipaddress))
+            .parameter(literal("0"))
+            .parameter(literal(hostname));
+    }
+    public static RpcRequest disconnect() {
+        return request()
+            .code("10304")
+            .version(null)
+            .name("#BYE#");    
+    }
+    public static RpcRequest login(String access, String verify) {
+        StringBuffer av = new StringBuffer()
             .append("1").append(access).append(";").append(verify).append("1");
-	    return request()
-	    	.name("XUS AV CODE")
-	    	.parameter(literal(av.toString()));	
-	}
-	public static RpcRequest signon() {
-	    return request()
-	    	.name("XUS SIGNON SETUP");
-	}
+        return request()
+            .name("XUS AV CODE")
+            .parameter(literal(av.toString()));    
+    }
+    public static RpcRequest signon() {
+        return request()
+            .name("XUS SIGNON SETUP");
+    }
 
-	public static RpcRequest request() {
-		return new RpcRequest()
-		    .namespace(RpcConstants.RPC_DEFAULT_NS)
-	    	.code(RpcConstants.RPC_DEFAULT_CODE)
-		    .version(RpcConstants.RPC_VERSION);
-	}
+    public static RpcRequest request() {
+        return new RpcRequest()
+            .namespace(RpcConstants.RPC_DEFAULT_NS)
+            .code(RpcConstants.RPC_DEFAULT_CODE)
+            .version(RpcConstants.RPC_VERSION);
+    }
 
-	public static Parameter literal(String value) {
-		return new LiteralParameter(value);
-	}
-	public static Parameter ref(String value) {
-		return new ReferenceParameter(value);
-	}
-	public static Parameter global(String key, String value) {
-		return new GlobalParameter(key, value);
-	}
-	public static Parameter empty() {
-		return new EmptyParameter();
-	}
+    public static Parameter literal(String value) {
+        return new LiteralParameter(value);
+    }
+    public static Parameter ref(String value) {
+        return new ReferenceParameter(value);
+    }
+    public static Parameter global(String key, String value) {
+        return new GlobalParameter(key, value);
+    }
+    public static Parameter empty() {
+        return new EmptyParameter();
+    }
 
-	protected RpcCommandsSupport() {
-		// TODO: allow inheritance for convenience or enforce static utility class?
-	}
+    protected RpcCommandsSupport() {
+        // TODO: allow inheritance for convenience or enforce static utility class?
+    }
+
 }
+
