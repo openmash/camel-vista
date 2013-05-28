@@ -16,17 +16,55 @@
 
 package org.osehra.vista.camel.rpc;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.osehra.vista.camel.api.Parameter;
+
 
 public final class RpcRequest {
+    private String namespace;
+    private String code;
+    private String version;
     private String name;
+    private final List<Parameter> parameters = new ArrayList<Parameter>();
 
+    public String getNamespace() {
+        return namespace;
+    }
+    public String getCode() {
+        return code;
+    }
+    public String getVersion() {
+        return version;
+    }
     public String getName() {
         return name;
     }
-    public RpcRequest setName(String name) {
+    public List<Parameter> getParmeters() {
+        return parameters;
+    }
+
+    public RpcRequest namespace(String namespace) {
+        this.namespace = namespace;
+        return this;
+    }
+    public RpcRequest code(String code) {
+        this.code = code;
+        return this;
+    }
+    public RpcRequest version(String version) {
+        this.version = version;
+        return this;
+    }
+    public RpcRequest name(String name) {
         this.name = name;
         return this;
     }
-    
+    public RpcRequest parameter(Parameter param) {
+        parameters.add(param);
+    	return this;
+    }
+
 }
 

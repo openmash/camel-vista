@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.osehra.vista.camel.rpc;
+package org.osehra.vista.camel.rpc.codec;
 
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;

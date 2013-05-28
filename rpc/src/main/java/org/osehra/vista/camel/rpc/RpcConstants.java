@@ -19,7 +19,7 @@ package org.osehra.vista.camel.rpc;
 
 public final class RpcConstants {
 
-    public static final int MAX_NS_LEN = 4;
+	public static final int MAX_NS_LEN = 4;
     public static final int CODE_LEN = 5;
     public static final int PARAM_PACK_LEN = 3;
 
@@ -38,6 +38,8 @@ public final class RpcConstants {
     public static final String RPC_DEFAULT_NS = "XWB";
     public static final String RPC_DEFAULT_CODE = "11302";
     public static final String RPC_VERSION = "2.0";
+	public static final String DEFAULT_HOST = "localhost";
+	public static final int DEFAULT_PORT = 9220;
 
     private RpcConstants() {
         // Utility class

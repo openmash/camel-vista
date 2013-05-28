@@ -23,7 +23,7 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Slf4JLoggerFactory;
-import org.osehra.vista.camel.rpc.RpcServerPipelineFactory;
+import org.osehra.vista.camel.rpc.codec.RpcServerPipelineFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

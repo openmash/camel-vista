@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.osehra.vista.camel.rpc;
+package org.osehra.vista.camel.rpc.codec;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -32,6 +32,8 @@ import org.osehra.vista.camel.api.GlobalParameter;
 import org.osehra.vista.camel.api.LiteralParameter;
 import org.osehra.vista.camel.api.Parameter;
 import org.osehra.vista.camel.api.ReferenceParameter;
+import org.osehra.vista.camel.rpc.RpcConstants;
+import org.osehra.vista.camel.rpc.RpcRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,7 +163,7 @@ public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State>
         }
 
         ctx.getPipeline().remove(this);
-        return new RpcRequest().setName(name);
+        return new RpcRequest().name(name);
     }
 
     private String readPackedParam(ChannelBuffer buffer) {
