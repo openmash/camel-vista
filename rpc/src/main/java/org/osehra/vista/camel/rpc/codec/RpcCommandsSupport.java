@@ -42,6 +42,17 @@ public class RpcCommandsSupport {
 	    	.version(null)
 	    	.name("#BYE#");	
 	}
+	public static RpcRequest login(String access, String verify) {
+		StringBuffer av = new StringBuffer()
+            .append("1").append(access).append(";").append(verify).append("1");
+	    return request()
+	    	.name("XUS AV CODE")
+	    	.parameter(literal(av.toString()));	
+	}
+	public static RpcRequest signon() {
+	    return request()
+	    	.name("XUS SIGNON SETUP");
+	}
 
 	public static RpcRequest request() {
 		return new RpcRequest()
