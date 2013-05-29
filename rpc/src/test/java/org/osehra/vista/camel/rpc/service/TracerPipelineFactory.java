@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-package org.osehra.vista.camel.rpc.codec;
+package org.osehra.vista.camel.rpc.service;
 
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
-import org.osehra.vista.camel.rpc.RpcRequest;
+import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.channel.ChannelPipelineFactory;
+import org.jboss.netty.channel.Channels;
+import org.jboss.netty.handler.logging.LoggingHandler;
+import org.jboss.netty.logging.InternalLogLevel;
 
 
-public class RpcRequestEncoder extends OneToOneEncoder {
+public class TracerPipelineFactory implements ChannelPipelineFactory {
 
     @Override
-    protected Object encode(ChannelHandlerContext ctx, Channel channel, Object msg) throws Exception {
-        return (msg instanceof RpcRequest) ? RpcCodecUtils.encodeRequest((RpcRequest)msg) : msg;
+    public ChannelPipeline getPipeline() throws Exception {
+
+        ChannelPipeline pipeline = Channels.pipeline();
+        pipeline.addLast("logger", new LoggingHandler(InternalLogLevel.DEBUG));
+        pipeline.addLast("handler", new TracerHandler());
+
+        return pipeline;
     }
 
 }

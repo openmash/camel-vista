@@ -24,8 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class VistaServerSupport extends VistaServiceSupport implements Runnable {
-    private final static Logger LOG = LoggerFactory.getLogger(VistaServiceSupport.class);
+public abstract class VistaServerSupport extends VistaServiceSupport implements Runnable {
+    protected final static Logger LOG = LoggerFactory.getLogger(VistaServiceSupport.class);
 
     private final CountDownLatch latch = new CountDownLatch(1);
     private AtomicBoolean completed = new AtomicBoolean();

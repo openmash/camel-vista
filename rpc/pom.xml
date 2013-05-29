@@ -55,6 +55,11 @@
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
       </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+      </dependency>
   </dependencies>
 
   <build>
@@ -74,6 +79,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <configuration>
           <mainClass>${target.main.class}</mainClass>
+          <classpathScope>test</classpathScope>
           <includePluginDependencies>false</includePluginDependencies>
         </configuration>
       </plugin>
@@ -84,8 +90,16 @@
     <profile>
       <id>run-server</id>
       <properties>
-        <!-- Running Mock Vista RPC server -->
+        <!-- Running Vista RPC server -->
         <target.main.class>org.osehra.vista.camel.rpc.service.VistaServerMain</target.main.class>
+        <target.main.args />
+      </properties>
+    </profile>
+    <profile>
+      <id>run-client</id>
+      <properties>
+        <!-- Running Vista RPC client -->
+        <target.main.class>org.osehra.vista.camel.rpc.service.VistaClientMain</target.main.class>
       </properties>
     </profile>
   </profiles>

@@ -23,13 +23,11 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Slf4JLoggerFactory;
-import org.osehra.vista.camel.rpc.codec.RpcServerPipelineFactory;
 
 
-public class VistaServerMain extends VistaServerSupport {
-
+public class VistaRequestTracer extends VistaServerSupport {
     public static void main(String... args) {
-        new VistaServerMain().run();
+        new VistaRequestTracer().run();
     }
 
     @Override
@@ -52,7 +50,7 @@ public class VistaServerMain extends VistaServerSupport {
                 Executors.newCachedThreadPool(),
                 Executors.newCachedThreadPool()));
 
-        bootstrap.setPipelineFactory(new RpcServerPipelineFactory());
+        bootstrap.setPipelineFactory(new TracerPipelineFactory());
         bootstrap.setOption("child.tcpNoDelay", true);
         bootstrap.setOption("child.keepAlive", true);
 

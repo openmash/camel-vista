@@ -17,10 +17,14 @@
 package org.osehra.vista.camel.rpc.service;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelFuture;
+import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.osehra.vista.camel.rpc.RpcConstants;
+import org.osehra.vista.camel.rpc.codec.RpcClientPipelineFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,16 +58,19 @@ public class VistaClientMain implements Runnable {
         LOG.info("Starting VistA RPC client");
 
         try {
-            ClientBootstrap b = new ClientBootstrap();
-            Channel ch = b.connect(new InetSocketAddress(host, port)).sync().getChannel();
+            // Configure the client.
+            ClientBootstrap bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(
+                Executors.newCachedThreadPool(),
+                Executors.newCachedThreadPool()));
 
-            while (true) {
-                if ("bye".equals("expression")) {
-                    ch.close().sync();
-                }
-            }
-        } catch (InterruptedException e) {
-            // TODO: LOG? otherwise just ignore
+            // Set up the event pipeline factory.
+            bootstrap.setPipelineFactory(new RpcClientPipelineFactory());
+            
+            ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
+            Channel channel = connectFuture.awaitUninterruptibly().getChannel();
+
+            // Shut down all thread pools to exit.
+            bootstrap.releaseExternalResources();
         } finally {
             // TODO: anything to closer gracefully?
         }
