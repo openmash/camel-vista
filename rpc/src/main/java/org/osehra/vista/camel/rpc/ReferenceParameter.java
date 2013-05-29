@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.osehra.vista.camel.api;
+package org.osehra.vista.camel.rpc;
 
 
 public final class ReferenceParameter implements Parameter {

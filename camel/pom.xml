@@ -35,10 +35,6 @@
   <dependencies>
       <dependency>
         <groupId>org.osehra.vista.camel</groupId>
-        <artifactId>vista-api</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.osehra.vista.camel</groupId>
         <artifactId>vista-rpc</artifactId>
       </dependency>
   </dependencies>

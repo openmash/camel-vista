@@ -16,11 +16,11 @@
 
 package org.osehra.vista.camel.rpc.codec;
 
-import org.osehra.vista.camel.api.EmptyParameter;
-import org.osehra.vista.camel.api.GlobalParameter;
-import org.osehra.vista.camel.api.LiteralParameter;
-import org.osehra.vista.camel.api.Parameter;
-import org.osehra.vista.camel.api.ReferenceParameter;
+import org.osehra.vista.camel.rpc.EmptyParameter;
+import org.osehra.vista.camel.rpc.GlobalParameter;
+import org.osehra.vista.camel.rpc.LiteralParameter;
+import org.osehra.vista.camel.rpc.Parameter;
+import org.osehra.vista.camel.rpc.ReferenceParameter;
 import org.osehra.vista.camel.rpc.RpcConstants;
 import org.osehra.vista.camel.rpc.RpcRequest;
 

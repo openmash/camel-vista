@@ -19,8 +19,6 @@ package org.osehra.vista.camel.rpc;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osehra.vista.camel.api.Parameter;
-
 
 public final class RpcRequest {
     private String namespace;

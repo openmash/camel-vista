@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package org.osehra.vista.camel.api;
+package org.osehra.vista.camel.rpc;
 
 
-public final class EmptyParameter implements Parameter {
+public final class LiteralParameter implements Parameter {
+    private final String value;
+
+    public LiteralParameter(String value) {
+        this.value = value;
+    }
+    public String getValue() {
+        return value;
+    }
     
 }
 

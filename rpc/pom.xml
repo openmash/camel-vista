@@ -34,11 +34,6 @@
 
   <dependencies>
       <dependency>
-        <groupId>org.osehra.vista.camel</groupId>
-        <artifactId>vista-api</artifactId>
-      </dependency>
-
-      <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty</artifactId>
       </dependency>

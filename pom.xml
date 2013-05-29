@@ -50,7 +50,6 @@
   </properties>
    
   <modules>
-    <module>api</module>
     <module>rpc</module>
     <module>camel</module>
     <module>features</module>
@@ -59,11 +58,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>org.osehra.vista.camel</groupId>
-        <artifactId>vista-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <dependency>
         <groupId>org.osehra.vista.camel</groupId>
         <artifactId>vista-rpc</artifactId>
