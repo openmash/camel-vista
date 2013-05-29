@@ -79,7 +79,7 @@ public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State>
             if (len > RpcConstants.MAX_NS_LEN) {
                 throw new TooLongFrameException();
             }
-            namespace = buffer.readBytes(len).toString(Charset.forName("UTF-8"));
+            namespace = buffer.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET);
             buffer.skipBytes(1);
 
             LOG.debug("RPC.decode: namespace={}", namespace);
@@ -87,7 +87,7 @@ public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State>
         }
         case READ_CODE: {
             // Code has a fixed size of 5 chars
-            code = buffer.readBytes(RpcConstants.CODE_LEN).toString(Charset.forName("UTF-8"));
+            code = buffer.readBytes(RpcConstants.CODE_LEN).toString(RpcCodecUtils.DEF_CHARSET);
             LOG.debug("RPC.decode: code={}", code);
             checkpoint(State.READ_NAME);
         }
@@ -98,7 +98,7 @@ public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State>
                 if (b == '\0') {
                     throw new CorruptedFrameException();
                 }
-                String s = buffer.readBytes((int)b).toString(Charset.forName("UTF-8"));
+                String s = buffer.readBytes((int)b).toString(RpcCodecUtils.DEF_CHARSET);
                 if (version == null && s.charAt(0) >= '0' && s.charAt(0) <= '9') {
                     // TODO: when is version mandatory and when is it optional, if ever?
                     version = s;
@@ -171,8 +171,8 @@ public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State>
     }
 
     private String readPackedParam(ChannelBuffer buffer, int len) {
-        int count = Integer.parseInt(buffer.readBytes(len).toString(Charset.forName("UTF-8")));
-        return buffer.readBytes(count).toString(Charset.forName("UTF-8"));
+        int count = Integer.parseInt(buffer.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET));
+        return buffer.readBytes(count).toString(RpcCodecUtils.DEF_CHARSET);
     }
 
     enum State {

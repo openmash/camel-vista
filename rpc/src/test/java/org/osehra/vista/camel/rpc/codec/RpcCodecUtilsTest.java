@@ -45,7 +45,7 @@ public class RpcCodecUtilsTest {
 
             Assert.assertEquals(text.length() + 1, out.readableBytes());
             Assert.assertEquals(text.length(), out.readByte());
-            Assert.assertEquals(text, out.readBytes(text.length()).toString(Charset.forName("UTF-8")));
+            Assert.assertEquals(text, out.readBytes(text.length()).toString(RpcCodecUtils.DEF_CHARSET));
         } catch (UnsupportedEncodingException e) {
             Assert.fail("String encoding failed " + e);
         }
@@ -57,9 +57,9 @@ public class RpcCodecUtilsTest {
             RpcCodecUtils.encodeField(text, lenlen, out);
 
             Assert.assertEquals(text.length() + lenlen, out.readableBytes());
-            int len = Integer.parseInt(out.readBytes(lenlen).toString(Charset.forName("UTF-8")));
+            int len = Integer.parseInt(out.readBytes(lenlen).toString(RpcCodecUtils.DEF_CHARSET));
             Assert.assertEquals(text.length(), len);
-            Assert.assertEquals(text, out.readBytes(len).toString(Charset.forName("UTF-8")));
+            Assert.assertEquals(text, out.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET));
         } catch (UnsupportedEncodingException e) {
             Assert.fail("String encoding failed " + e);
         }

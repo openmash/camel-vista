@@ -17,6 +17,7 @@
 package org.osehra.vista.camel.rpc.codec;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -35,6 +36,8 @@ import org.slf4j.LoggerFactory;
 public final class RpcCodecUtils {
     private static final Logger LOG = LoggerFactory.getLogger(RpcCodecUtils.class);
 
+    public static final Charset DEF_CHARSET = Charset.forName("UTF-8");
+
     public static ChannelBuffer encodeRequest(final RpcRequest request) {
         return encodeRequest(request, true);
     }
@@ -44,10 +47,10 @@ public final class RpcCodecUtils {
         
         try {
             cb.writeByte((byte) RpcConstants.NS_START);
-            cb.writeBytes(request.getNamespace().getBytes("UTF-8"));
+            cb.writeBytes(request.getNamespace().getBytes(DEF_CHARSET));
             cb.writeByte((byte) RpcConstants.NS_STOP);
 
-            cb.writeBytes(request.getCode().getBytes("UTF-8"));
+            cb.writeBytes(request.getCode().getBytes(DEF_CHARSET));
             
             encodeText(request.getVersion(), cb);
             encodeText(request.getName(), cb);
@@ -73,7 +76,7 @@ public final class RpcCodecUtils {
     public static void encodeText(final String text, ChannelBuffer out) throws UnsupportedEncodingException {
         if (text != null && text.length() > 0) {
             out.writeByte(text.length());
-            out.writeBytes(text.getBytes("UTF-8"));
+            out.writeBytes(text.getBytes(DEF_CHARSET));
         }
     }
 
@@ -84,8 +87,8 @@ public final class RpcCodecUtils {
 
     public static void encodeField(final String text, int lenlen, ChannelBuffer out) throws UnsupportedEncodingException {
         String f = "%0" + lenlen + "d"; // left pad with 0's up to length of lenlen
-        out.writeBytes(String.format(f, text.length()).getBytes("UTF-8"));
-        out.writeBytes(text.getBytes("UTF-8"));
+        out.writeBytes(String.format(f, text.length()).getBytes(DEF_CHARSET));
+        out.writeBytes(text.getBytes(DEF_CHARSET));
     }
 
     public static void encodeParameter(final Parameter param, ChannelBuffer out) throws UnsupportedEncodingException {
