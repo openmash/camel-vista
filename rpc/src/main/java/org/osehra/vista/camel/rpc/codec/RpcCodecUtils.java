@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.handler.codec.frame.CorruptedFrameException;
 import org.osehra.vista.camel.api.EmptyParameter;
 import org.osehra.vista.camel.api.GlobalParameter;
 import org.osehra.vista.camel.api.LiteralParameter;
@@ -131,6 +132,58 @@ public final class RpcCodecUtils {
         out.writeByte(RpcConstants.PARAM_TYPE_EMPTY);
         out.writeByte(RpcConstants.PARAM_STOP);
     }
+
+    public static Parameter decodeParameter(ChannelBuffer in) throws CorruptedFrameException {
+        Parameter param = null;
+        // Fist byte indicates the parameter type
+        byte b = in.readByte();
+        switch (b) {
+        case RpcConstants.FRAME_STOP:
+            return null;
+        case RpcConstants.PARAM_TYPE_LITERAL: {
+            param = new LiteralParameter(decodeField(in));
+            break;
+        }
+        case RpcConstants.PARAM_TYPE_REF: {
+            param = new ReferenceParameter(decodeField(in));
+            break;
+        }
+        case RpcConstants.PARAM_TYPE_LIST: {
+            // TODO: implement me
+            break;
+        }
+        case RpcConstants.PARAM_TYPE_GLOBAL: {
+            param = new GlobalParameter(decodeField(in), decodeField(in));
+            break;
+        }
+        case RpcConstants.PARAM_TYPE_EMPTY: {
+            param = new EmptyParameter();
+            break;
+        }
+        case RpcConstants.PARAM_TYPE_STREAM: {
+            // TODO: implement me
+            break;
+        }
+        default:
+            throw new CorruptedFrameException("Unkown RPC parameter type: '" + String.format("%02x ", b) + "'");
+        }
+        
+        b = in.readByte();
+        if (b != RpcConstants.PARAM_STOP) {
+            throw new CorruptedFrameException("Expected end of parameter, got '" + String.format("%02x ", b) + "' instead");
+        }
+        return param;
+    }
+
+    public static String decodeField(ChannelBuffer in) {
+        return decodeField(in, RpcConstants.PARAM_PACK_LEN);
+    }
+    
+    public static String decodeField(ChannelBuffer in, int len) {
+        int count = Integer.parseInt(in.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET));
+        return in.readBytes(count).toString(RpcCodecUtils.DEF_CHARSET);
+    }
+
 
     private RpcCodecUtils() {
         // Utility class

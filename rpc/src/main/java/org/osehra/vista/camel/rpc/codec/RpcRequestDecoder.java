@@ -16,7 +16,6 @@
 
 package org.osehra.vista.camel.rpc.codec;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +25,7 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.CorruptedFrameException;
 import org.jboss.netty.handler.codec.frame.TooLongFrameException;
 import org.jboss.netty.handler.codec.replay.ReplayingDecoder;
-
-import org.osehra.vista.camel.api.EmptyParameter;
-import org.osehra.vista.camel.api.GlobalParameter;
-import org.osehra.vista.camel.api.LiteralParameter;
 import org.osehra.vista.camel.api.Parameter;
-import org.osehra.vista.camel.api.ReferenceParameter;
 import org.osehra.vista.camel.rpc.RpcConstants;
 import org.osehra.vista.camel.rpc.RpcRequest;
 
@@ -111,48 +105,20 @@ public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State>
         }
         case READ_PARAMS: {
             byte b = buffer.readByte();
-            if (b != RpcConstants.PARAMS_START && b != RpcConstants.FRAME_STOP) {
-                throw new CorruptedFrameException();
+            if (b == RpcConstants.FRAME_STOP) {
+                // no parameters
+                break;
             }
-            while (b != RpcConstants.FRAME_STOP) {
-                // read parameters
-                b = buffer.readByte();
-                switch (b) {
-                case RpcConstants.FRAME_STOP:
-                    continue;
-                case RpcConstants.PARAM_TYPE_LITERAL: {
-                    params.add(new LiteralParameter(readPackedParam(buffer)));
-                    b = buffer.readByte();
-                    break;
-                }
-                case RpcConstants.PARAM_TYPE_REF: {
-                    params.add(new ReferenceParameter(readPackedParam(buffer)));
-                    break;
-                }
-                case RpcConstants.PARAM_TYPE_LIST: {
-                    // TODO: implement me
-                    break;
-                }
-                case RpcConstants.PARAM_TYPE_GLOBAL: {
-                    params.add(new GlobalParameter(readPackedParam(buffer), readPackedParam(buffer)));
-                    b = buffer.readByte();
-                    break;
-                }
-                case RpcConstants.PARAM_TYPE_EMPTY: {
-                    params.add(new EmptyParameter());
-                    b = buffer.readByte();
-                    break;
-                }
-                case RpcConstants.PARAM_TYPE_STREAM: {
-                    // TODO: implement me
-                    break;
-                }
-                default:
-                    throw new CorruptedFrameException("Unkown RPC parameter type: '" + b + "'");
-                }
-                
-                if (b != RpcConstants.PARAM_STOP) {
-                    throw new CorruptedFrameException("Expected end of paramter frame, got '" + b + "' instead");
+            if (b != RpcConstants.PARAMS_START) {
+                throw new CorruptedFrameException("Expected either parameters of end of frame.");
+            }
+
+            boolean eoframe = false;
+            while (!eoframe) {
+                Parameter param = RpcCodecUtils.decodeParameter(buffer);
+                eoframe = param != null;
+                if (!eoframe) {
+                    params.add(param);
                 }
             }
             break;
@@ -164,15 +130,6 @@ public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State>
 
         ctx.getPipeline().remove(this);
         return new RpcRequest().name(name);
-    }
-
-    private String readPackedParam(ChannelBuffer buffer) {
-        return readPackedParam(buffer, RpcConstants.PARAM_PACK_LEN);
-    }
-
-    private String readPackedParam(ChannelBuffer buffer, int len) {
-        int count = Integer.parseInt(buffer.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET));
-        return buffer.readBytes(count).toString(RpcCodecUtils.DEF_CHARSET);
     }
 
     enum State {
