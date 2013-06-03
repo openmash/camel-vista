@@ -23,8 +23,11 @@ import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.jboss.netty.logging.InternalLoggerFactory;
+import org.jboss.netty.logging.Slf4JLoggerFactory;
 import org.osehra.vista.camel.rpc.RpcConstants;
 import org.osehra.vista.camel.rpc.codec.RpcClientPipelineFactory;
+import org.osehra.vista.camel.rpc.codec.RpcCommandsSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +50,7 @@ public class VistaClientMain implements Runnable {
     public static void main(String... args) {
         // TODO: use configured defaults?
         if (args.length != 2) {
-            System.err.println("Usage: " + VistaClientMain.class.getSimpleName() + " <host> <port>");
+            System.out.println("Usage: " + VistaClientMain.class.getSimpleName() + " <host> <port>");
             return;
         }
 
@@ -55,6 +58,7 @@ public class VistaClientMain implements Runnable {
     }
 
     public void run() {
+        InternalLoggerFactory.setDefaultFactory(new Slf4JLoggerFactory());
         LOG.info("Starting VistA RPC client");
 
         try {
@@ -66,11 +70,42 @@ public class VistaClientMain implements Runnable {
             // Set up the event pipeline factory.
             bootstrap.setPipelineFactory(new RpcClientPipelineFactory());
             
+            ChannelFuture response;
             ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
             Channel channel = connectFuture.awaitUninterruptibly().getChannel();
 
+            response = channel.write(RpcCommandsSupport.connect("192.169.1.100", "vista.example.org"));
+            response.awaitUninterruptibly();
+            Thread.sleep(3000);
+
+            response = channel.write(RpcCommandsSupport.signonSetup());
+            response.awaitUninterruptibly();
+            Thread.sleep(5000);
+
+            response = channel.write(RpcCommandsSupport.login("boating1", "boating1."));
+            response.awaitUninterruptibly();
+            Thread.sleep(5000);
+
+            response = channel.write(RpcCommandsSupport.context("OR CPRS GUI CHART"));
+            response.awaitUninterruptibly();
+            Thread.sleep(5000);
+
+            response = channel.write(
+                RpcCommandsSupport.request()
+                    .name("ORWPT SELECT")
+                    .parameter(RpcCommandsSupport.literal("100708")));
+            response.awaitUninterruptibly();
+            Thread.sleep(5000);
+
+            response = channel.write(RpcCommandsSupport.disconnect());
+            response.awaitUninterruptibly();
+            Thread.sleep(1000);
+
             // Shut down all thread pools to exit.
             bootstrap.releaseExternalResources();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         } finally {
             // TODO: anything to closer gracefully?
         }

@@ -19,6 +19,7 @@ package org.osehra.vista.camel.rpc;
 
 public final class RpcConstants {
 
+    public static final int MAX_FRAME_LEN = 64 * 1024;
     public static final int MAX_NS_LEN = 4;
     public static final int CODE_LEN = 5;
     public static final int PARAM_PACK_LEN = 3;
@@ -33,7 +34,9 @@ public final class RpcConstants {
     public static final char PARAM_TYPE_EMPTY = '4';
     public static final char PARAM_TYPE_STREAM = '5';
     public static final char PARAM_STOP = 'f';
+    public static final char FRAME_START = '\0';
     public static final char FRAME_STOP = '\4';
+    public static final char FIELD_DELIM = '^';
 
     public static final String RPC_DEFAULT_NS = "XWB";
     public static final String RPC_DEFAULT_CODE = "11302";

@@ -16,9 +16,11 @@
 
 package org.osehra.vista.camel.rpc.service;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelEvent;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -26,12 +28,15 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 
+import org.osehra.vista.camel.rpc.RpcConstants;
+import org.osehra.vista.camel.rpc.codec.RpcCodecUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class TracerHandler extends SimpleChannelHandler {
     private final static Logger LOG = LoggerFactory.getLogger(TracerHandler.class);
+    final AtomicInteger count = new AtomicInteger(0);
 
     private final AtomicLong transferredBytes = new AtomicLong();
 
@@ -54,6 +59,19 @@ public class TracerHandler extends SimpleChannelHandler {
         int received = ((ChannelBuffer)e.getMessage()).readableBytes();
         long total = transferredBytes.addAndGet(((ChannelBuffer)e.getMessage()).readableBytes());
         LOG.info("Received {}/{} bytes", received, total);
+
+        ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
+        cb.writeByte((byte)RpcConstants.FRAME_START);
+        cb.writeByte((byte)RpcConstants.FRAME_START);
+
+        int idx = count.incrementAndGet();
+        String response = "hello^world " + idx;
+        if (idx % 2 == 0) {
+            response += "\r\nau^revoir^^monde";
+        }
+        cb.writeBytes(response.getBytes(RpcCodecUtils.DEF_CHARSET));
+        cb.writeByte((byte)RpcConstants.FRAME_STOP);
+        e.getChannel().write(cb);
     }
 
     @Override

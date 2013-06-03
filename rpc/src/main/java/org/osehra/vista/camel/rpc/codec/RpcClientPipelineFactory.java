@@ -16,21 +16,27 @@
 
 package org.osehra.vista.camel.rpc.codec;
 
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
+import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
 import org.jboss.netty.handler.logging.LoggingHandler;
 import org.jboss.netty.logging.InternalLogLevel;
+import org.osehra.vista.camel.rpc.RpcConstants;
 
 
 public class RpcClientPipelineFactory implements ChannelPipelineFactory {
+    private static final char[] DELIM = { RpcConstants.FRAME_STOP };
 
     @Override
     public ChannelPipeline getPipeline() throws Exception {
 
         ChannelPipeline pipeline = Channels.pipeline();
         pipeline.addLast("logger", new LoggingHandler(InternalLogLevel.DEBUG));
-        pipeline.addLast("decoder", new RpcRequestDecoder());
+        pipeline.addLast("decoder-frame", new DelimiterBasedFrameDecoder(RpcConstants.MAX_FRAME_LEN,
+            ChannelBuffers.unmodifiableBuffer(ChannelBuffers.copiedBuffer(DELIM, RpcCodecUtils.DEF_CHARSET))));
+        pipeline.addLast("decoder-response", new RpcResponseDecoder());
         pipeline.addLast("encoder", new RpcRequestEncoder());
         pipeline.addLast("handler", new RpcClientHandler());
 

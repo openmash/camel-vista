@@ -47,15 +47,19 @@ public class RpcCommandsSupport {
             .name("#BYE#");    
     }
     public static RpcRequest login(String access, String verify) {
-        StringBuffer av = new StringBuffer()
-            .append("1").append(access).append(";").append(verify).append("1");
         return request()
             .name("XUS AV CODE")
-            .parameter(literal(av.toString()));    
+            .parameter(literal(one(new StringBuffer()
+                .append(access).append(";").append(verify).toString())));
     }
-    public static RpcRequest signon() {
+    public static RpcRequest signonSetup() {
         return request()
             .name("XUS SIGNON SETUP");
+    }
+    public static RpcRequest context(String context) {
+        return request()
+            .name("XWB CREATE CONTEXT")
+            .parameter(literal(one(context)));
     }
 
     public static RpcRequest request() {
@@ -76,6 +80,9 @@ public class RpcCommandsSupport {
     }
     public static Parameter empty() {
         return new EmptyParameter();
+    }
+    public static String one(String param) {
+        return new StringBuffer().append("1").append(param).append("1").toString();
     }
 
     protected RpcCommandsSupport() {

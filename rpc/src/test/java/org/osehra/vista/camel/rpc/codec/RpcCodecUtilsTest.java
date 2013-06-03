@@ -17,49 +17,41 @@
 package org.osehra.vista.camel.rpc.codec;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.osehra.vista.camel.rpc.RpcConstants;
 
 
 public class RpcCodecUtilsTest {
 
     @Test
     public void testTextEncoding() {
-        runTextEncodingTest("dummy");
-    }
-    
-    @Test
-    public void testFieldEncoding() {
-        runTextEncodingTest("dummy");
-    }
-    
-    protected void runTextEncodingTest(String text) {
         try {
+            String text = "dummy";
             ChannelBuffer out = ChannelBuffers.dynamicBuffer();
             RpcCodecUtils.encodeText(text, out);
 
             Assert.assertEquals(text.length() + 1, out.readableBytes());
-            Assert.assertEquals(text.length(), out.readByte());
-            Assert.assertEquals(text, out.readBytes(text.length()).toString(RpcCodecUtils.DEF_CHARSET));
+            Assert.assertEquals("\5dummy", out.readBytes(text.length() + 1).toString(RpcCodecUtils.DEF_CHARSET));
         } catch (UnsupportedEncodingException e) {
             Assert.fail("String encoding failed " + e);
         }
     }
 
-    protected void runFieldEncodingTest(String text, int lenlen) {
+    @Test
+    public void testValueEncoding() {
         try {
+            int len = RpcConstants.PARAM_PACK_LEN;
+            String value = "dummy";
             ChannelBuffer out = ChannelBuffers.dynamicBuffer();
-            RpcCodecUtils.encodeField(text, lenlen, out);
+            RpcCodecUtils.encodeField(value, len, out);
 
-            Assert.assertEquals(text.length() + lenlen, out.readableBytes());
-            int len = Integer.parseInt(out.readBytes(lenlen).toString(RpcCodecUtils.DEF_CHARSET));
-            Assert.assertEquals(text.length(), len);
-            Assert.assertEquals(text, out.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET));
+            Assert.assertEquals(value.length() + len, out.readableBytes());
+            Assert.assertEquals("005dummy", out.readBytes(value.length() + len).toString(RpcCodecUtils.DEF_CHARSET));
         } catch (UnsupportedEncodingException e) {
             Assert.fail("String encoding failed " + e);
         }

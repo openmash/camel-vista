@@ -16,7 +16,6 @@
 
 package org.osehra.vista.camel.rpc.codec;
 
-import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelEvent;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -42,21 +41,11 @@ public class RpcClientHandler extends SimpleChannelUpstreamHandler {
     @Override
     public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
         LOG.info("Channel connected");
-        Channel channel = e.getChannel();
-        if (channel.isWritable()) {
-            channel.write(RpcCommandsSupport.connect("192.169.1.100", "vista.example.org"));
-            channel.write(RpcCommandsSupport.disconnect());
-        }
-    }
-
-    @Override
-    public void channelInterestChanged(ChannelHandlerContext ctx, ChannelStateEvent e) {
-        LOG.info("Channel interest changed");
     }
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, final MessageEvent e) {
-        LOG.info("message received");
+        LOG.info("message received '{}'", e.getMessage());
         /*
         // Offer the answer after closing the connection.
         e.getChannel().close().addListener(new ChannelFutureListener() {
