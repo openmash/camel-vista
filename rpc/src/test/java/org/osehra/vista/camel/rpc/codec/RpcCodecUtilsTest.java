@@ -17,12 +17,16 @@
 package org.osehra.vista.camel.rpc.codec;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.osehra.vista.camel.cia.codec.CiaCodecUtils;
 import org.osehra.vista.camel.rpc.RpcConstants;
 
 
@@ -57,5 +61,44 @@ public class RpcCodecUtilsTest {
         }
     }
 
+    @Test
+    public void testFoo() {
+        System.out.println((byte)14);
+        System.out.println((byte)(14 & 0xff));
+        System.out.println((byte)114);
+        System.out.println((byte)(114 & 0xff));
+        System.out.println((byte)1114);
+        System.out.println((byte)(1114 & 0xff));
+        System.out.println((byte)356);
+        System.out.println((byte)(356 & 0xff));
+
+        int slen = 21;
+        int low = slen % 16;
+        slen = slen >> 4;
+        List<Byte> bytes = new ArrayList<Byte>();
+        int highCount = 0;
+        while (slen != 0) {
+            bytes.add(new Byte((byte)slen));
+            slen = slen >> 8;
+            highCount += 1;
+        }
+
+        System.out.println("hicount=" + highCount);
+        System.out.println("count=" + bytes.size());
+        for (Byte b : bytes) {
+            System.out.print(b);
+            System.out.print(" ");
+        }
+
+        System.out.println("TOTAL");
+        System.out.print((highCount << 4) + low);
+        System.out.print(" ");
+        Collections.reverse(bytes);
+        for (Byte b : bytes) {
+            System.out.print(b);
+            System.out.print(" ");
+        }
+
+    }
 }
 
