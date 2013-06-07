@@ -29,7 +29,7 @@ public final class RpcConstants {
     public static final char PARAMS_START = '5';
     public static final char PARAM_TYPE_LITERAL = '0';
     public static final char PARAM_TYPE_REF = '1';
-    public static final char PARAM_TYPE_LIST = '2';
+    public static final char PARAM_TYPE_MAP = '2';
     public static final char PARAM_TYPE_GLOBAL = '3';
     public static final char PARAM_TYPE_EMPTY = '4';
     public static final char PARAM_TYPE_STREAM = '5';

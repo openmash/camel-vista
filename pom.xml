@@ -39,6 +39,7 @@
     <log4j.version>1.2.17</log4j.version>
     <netty.version>3.6.6.Final</netty.version>
     <slf4j.version>1.7.2</slf4j.version>
+    <slf4j-api.version>1.6.6</slf4j-api.version>
     <spring.version>3.0.7.RELEASE</spring.version>
 
     <maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
@@ -48,6 +49,9 @@
     <exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
     <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
 
+    <vista.osgi.imports>
+      org.slf4j.*;version="[1.6,2)"
+    </vista.osgi.imports>
     <vista.osgi.import.default.version>[$(version;==;$(@)),$(version;+;$(@)))</vista.osgi.import.default.version>
   </properties>
    
@@ -180,6 +184,7 @@
         <configuration>
           <excludeDependencies>false</excludeDependencies>
           <instructions>
+            <Import-Package>${vista.osgi.imports},*</Import-Package>
             <_versionpolicy>${vista.osgi.import.default.version}</_versionpolicy>
           </instructions>
         </configuration>

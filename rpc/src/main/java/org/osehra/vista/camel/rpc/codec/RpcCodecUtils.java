@@ -18,7 +18,9 @@ package org.osehra.vista.camel.rpc.codec;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -26,6 +28,7 @@ import org.jboss.netty.handler.codec.frame.CorruptedFrameException;
 import org.osehra.vista.camel.rpc.EmptyParameter;
 import org.osehra.vista.camel.rpc.GlobalParameter;
 import org.osehra.vista.camel.rpc.LiteralParameter;
+import org.osehra.vista.camel.rpc.MapParameter;
 import org.osehra.vista.camel.rpc.Parameter;
 import org.osehra.vista.camel.rpc.ReferenceParameter;
 import org.osehra.vista.camel.rpc.RpcConstants;
@@ -98,6 +101,8 @@ public final class RpcCodecUtils {
             encodeLiteralParameter((LiteralParameter)param, out);
         } else if (param instanceof ReferenceParameter) {
             encodeRefParameter((ReferenceParameter)param, out);
+        } else if (param instanceof MapParameter) {
+            encodeMapParameter((MapParameter)param, out);
         } else if (param instanceof GlobalParameter) {
             encodeGlobalParameter((GlobalParameter)param, out);
         } else if (param instanceof EmptyParameter) {
@@ -114,6 +119,33 @@ public final class RpcCodecUtils {
     public static void encodeRefParameter(final ReferenceParameter param, ChannelBuffer out) throws UnsupportedEncodingException {
         out.writeByte(RpcConstants.PARAM_TYPE_REF);
         encodeField(param.getValue(), out);
+        out.writeByte(RpcConstants.PARAM_STOP);
+    }
+
+    public static void encodeMapParameter(final MapParameter param, ChannelBuffer out) throws UnsupportedEncodingException {
+        out.writeByte(RpcConstants.PARAM_TYPE_MAP);
+        Map<String, String> map = param.getParams();
+
+        if (map.size() == 0) {
+            encodeField("", out);
+            out.writeByte(RpcConstants.PARAM_STOP);
+            return;
+        }
+
+        boolean sep = false;
+        for (Map.Entry<String, String> kv : param.getParams().entrySet()) {
+            if (sep) {
+                out.writeByte('t');
+            }
+            sep = true;
+
+            String value = kv.getValue();
+            if (value == null || value.length() == 0) {
+                value = "\001";
+            }
+            encodeField(kv.getKey(), out);
+            encodeField(value, out);
+        }
         out.writeByte(RpcConstants.PARAM_STOP);
     }
 
@@ -148,8 +180,8 @@ public final class RpcCodecUtils {
             param = new ReferenceParameter(decodeField(in));
             break;
         }
-        case RpcConstants.PARAM_TYPE_LIST: {
-            // TODO: implement me
+        case RpcConstants.PARAM_TYPE_MAP: {
+            param = new MapParameter(decodeMap(in));
             break;
         }
         case RpcConstants.PARAM_TYPE_GLOBAL: {
@@ -182,10 +214,35 @@ public final class RpcCodecUtils {
     public static String decodeField(ChannelBuffer in, int len) {
         int count = Integer.parseInt(in.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET));
         String value = in.readBytes(count).toString(RpcCodecUtils.DEF_CHARSET);
-        LOG.info("RPC parameter of len {}: {}", count, value);
         return value;
     }
 
+    public static Map<String, String> decodeMap(ChannelBuffer in) {
+        return decodeMap(in, RpcConstants.PARAM_PACK_LEN);
+    }
+    
+    public static Map<String, String> decodeMap(ChannelBuffer in, int len) {
+        Map<String, String> result = new LinkedHashMap<String, String>();
+        String key = decodeField(in);
+        if (key == null || key.length() == 0) {
+            return null;
+        }
+        byte b = 0;
+        while (b != RpcConstants.PARAM_STOP) {
+            String value = decodeField(in);
+            if (value.equals("\001")) {
+                value = "";
+            }
+            result.put(key, value);
+            b = in.getByte(in.readerIndex());
+            if (b == 't') {
+                in.readByte();  // skip it and read next key
+                key = decodeField(in);
+            }
+        }
+        return result;
+    }
+    
 
     private RpcCodecUtils() {
         // Utility class
