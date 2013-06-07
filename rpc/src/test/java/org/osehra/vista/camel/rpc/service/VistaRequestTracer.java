@@ -56,7 +56,7 @@ public class VistaRequestTracer extends VistaServerSupport {
 
         // Bind and start to accept incoming connections.
         // TODO: make port configurable
-        bootstrap.bind(new InetSocketAddress(9220));
+        bootstrap.bind(new InetSocketAddress(9820));
     }
 
 }

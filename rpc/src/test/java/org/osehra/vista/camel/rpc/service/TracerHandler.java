@@ -61,12 +61,9 @@ public class TracerHandler extends SimpleChannelHandler {
         LOG.info("Received {}/{} bytes", received, total);
 
         ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
-        cb.writeByte((byte)0x01);
         cb.writeByte((byte)0x00);
-        cb.writeBytes("1^0^1".getBytes(RpcCodecUtils.DEF_CHARSET));
-        cb.writeByte((byte)0x2e);
-        cb.writeBytes("1^^1".getBytes(RpcCodecUtils.DEF_CHARSET));
-        cb.writeByte((byte)0xff);
+        cb.writeByte((byte)0x00);
+        cb.writeByte((byte)0x04);
 
         e.getChannel().write(cb);
     }

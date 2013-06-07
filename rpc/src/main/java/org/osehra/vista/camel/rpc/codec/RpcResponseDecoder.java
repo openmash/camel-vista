@@ -38,13 +38,15 @@ public class RpcResponseDecoder extends FrameDecoder {
     protected Object decode(final ChannelHandlerContext ctx,
             final Channel channel, final ChannelBuffer buffer) throws Exception {
 
-        RpcResponse response = new RpcResponse();
         int l = framePrefixLen(buffer);
-        if (l <= 0) {
-            return response;    // empty frame
-        }
         LOG.trace("Skipping frame buffer of {} bytes", l);
         buffer.skipBytes(l);
+
+        RpcResponse response = new RpcResponse();
+        if (buffer.readableBytes() == 0) {
+            return response;    // empty frame
+        }
+
         boolean done = false;
         while (!done) {
             final int eol = findEndOfLine(buffer);
@@ -75,7 +77,7 @@ public class RpcResponseDecoder extends FrameDecoder {
                 return i - r;
             }
         }
-        return 0;
+        return w - r;
     }
 
     private List<String> parseRow(final ChannelBuffer buffer) {
