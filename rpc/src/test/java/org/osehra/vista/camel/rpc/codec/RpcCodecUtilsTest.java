@@ -62,43 +62,18 @@ public class RpcCodecUtilsTest {
     }
 
     @Test
-    public void testFoo() {
-        System.out.println((byte)14);
-        System.out.println((byte)(14 & 0xff));
-        System.out.println((byte)114);
-        System.out.println((byte)(114 & 0xff));
-        System.out.println((byte)1114);
-        System.out.println((byte)(1114 & 0xff));
-        System.out.println((byte)356);
-        System.out.println((byte)(356 & 0xff));
-
-        int slen = 21;
-        int low = slen % 16;
-        slen = slen >> 4;
-        List<Byte> bytes = new ArrayList<Byte>();
-        int highCount = 0;
-        while (slen != 0) {
-            bytes.add(new Byte((byte)slen));
-            slen = slen >> 8;
-            highCount += 1;
+    public void testCiaLengthEncoding() {
+        int[] values = { 10, 100, 1000, 10000, 100000, 1000000 };
+        for (int value : values) {
+            ChannelBuffer b = ChannelBuffers.dynamicBuffer();
+            byte[] encoded = CiaCodecUtils.encodeLen(value);
+            b.writeBytes(encoded);
+    
+            Assert.assertTrue(b.writerIndex() > 0);
+            byte len = b.readByte();
+            Assert.assertEquals(value, CiaCodecUtils.decodeLen(b, len));
         }
-
-        System.out.println("hicount=" + highCount);
-        System.out.println("count=" + bytes.size());
-        for (Byte b : bytes) {
-            System.out.print(b);
-            System.out.print(" ");
-        }
-
-        System.out.println("TOTAL");
-        System.out.print((highCount << 4) + low);
-        System.out.print(" ");
-        Collections.reverse(bytes);
-        for (Byte b : bytes) {
-            System.out.print(b);
-            System.out.print(" ");
-        }
-
     }
+
 }
 

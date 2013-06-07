@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +28,10 @@ import java.util.Random;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.handler.codec.frame.CorruptedFrameException;
 
 import org.osehra.vista.camel.cia.CiaRequest;
+import org.osehra.vista.camel.rpc.codec.RpcCodecUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +65,11 @@ public final class CiaCodecUtils {
         "yYgjf\"5VdHc#uA,W1i+v'6|@pr{n;DJ!8(btPGaQM.LT3oe?NB/&9>Z`-}02*%x<7lsqz4OS ~E$\\R]KI[:UwC_=h)kXmF",
         "5:iar.{YU7mBZR@-K|2 \"+~`M%8sq4JhPo<_X\\Sg3WC;Tuxz,fvEQ1p9=w}FAI&j/keD0c?)LN6OHV]lGy'$*>nd[(tb!#" };
 
+
+    public static byte nextSequenceIndex(byte current) {
+        return (byte)(++current == 0 ? 1 : current);
+    }
+
     public static ChannelBuffer encodeRequest(final CiaRequest request) {
         ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
         
@@ -72,10 +80,10 @@ public final class CiaCodecUtils {
         cb.writeByte(request.getType());
 
         for (Map.Entry<String, String> pair : request.getParameters().entrySet()) {
-            cb.writeBytes(lenEncoding(pair.getKey()));
+            cb.writeBytes(encodeLen(pair.getKey()));
             cb.writeBytes(pair.getKey().getBytes(DEF_CHARSET));
             cb.writeByte((byte)0);
-            cb.writeBytes(lenEncoding(pair.getValue()));
+            cb.writeBytes(encodeLen(pair.getValue()));
             cb.writeBytes(pair.getValue().getBytes(DEF_CHARSET));
         }
         cb.writeByte(EOD);
@@ -83,24 +91,61 @@ public final class CiaCodecUtils {
         return cb;
     }
 
-    public static byte nextSequenceIndex(byte current) {
-        return (byte)(++current == 0 ? 1 : current);
+    public static Map<String, String> decodeRequestParams(ChannelBuffer in) {
+        Map<String, String> result = new LinkedHashMap<String, String>();
+        byte b = 0;
+        int len = 0;
+        while (b != EOD) {
+            b = in.readByte();
+            if (b == EOD) {
+                break;
+            }
+            len = decodeLen(in, b);
+            String key = in.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET);
+            b = in.readByte();
+            if (b != 0x00) {
+                return null;
+            }
+            b = in.readByte();
+            len = decodeLen(in, b);
+            String value = in.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET);
+            result.put(key, value);
+        }
+        return result;
     }
 
-    public static byte[] lenEncoding(String value) {
-        int slen = value.length();
+    public static int decodeLen(ChannelBuffer in, int len) {
+        int result = 0;
+        int low = len % 16;
+        int count = len >> 4;
+
+        byte[] dst = new byte[count];
+        in.readBytes(dst);
+        for (int i = 0; i < count; i++) {
+            result += (dst[i] & 0xff);
+            result <<= (i == count - 1 ? 4 : 8);
+        }
+
+        return result + low;
+    }
+
+    public static byte[] encodeLen(String value) {
+        return encodeLen(value.length());
+    }
+
+    public static byte[] encodeLen(int slen) {
         int low = slen % 16;
         slen = slen >> 4;
 
         LinkedList<Byte> bytes = new LinkedList<Byte>();
         int highCount = 0;
         while (slen != 0) {
-            bytes.addFirst(new Byte((byte)slen));
-            slen = slen >> 8;
-            highCount += 1;
+            bytes.addFirst((byte)slen);
+            slen >>= 8;
+            highCount++;
         }
         bytes.addFirst((byte)((highCount << 4) + low));
-        
+
         int i = 0;
         byte[] result = new byte[bytes.size()];
         for (Byte b : bytes) { 

@@ -20,10 +20,14 @@ package org.osehra.vista.camel.cia;
 public final class CiaResponse {
 
     private byte sequence;
+    private byte code;
     private String message;
 
     public byte getSequence() {
         return sequence;
+    }
+    public byte getCode() {
+        return code;
     }
     public String getMessage() {
         return message;
@@ -33,7 +37,11 @@ public final class CiaResponse {
         this.sequence = sequence;
         return this;
     }
-    public CiaResponse message(String value) {
+    public CiaResponse code(byte code) {
+        this.code = code;
+        return this;
+    }
+    public CiaResponse message(String message) {
         this.message = message;
         return this;
     }

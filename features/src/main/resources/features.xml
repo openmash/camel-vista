@@ -20,23 +20,16 @@
   <repository>mvn:org.apache.karaf.assemblies.features/enterprise/${karaf.version}/xml/features</repository>
   <repository>mvn:org.apache.camel.karaf/apache-camel/${camel.version}/xml/features</repository>
     
-  <feature name='vista-common' version='${project.version}' resolver='(obr)'>
+  <feature name='vista-camel' version='${project.version}' resolver='(obr)'>
     <feature version="${camel.version}">camel</feature>
     <feature version="${camel.version}">camel-blueprint</feature>
-  </feature>
-        
-  <feature name='vista-rpc' version='${project.version}' resolver='(obr)'>
-    <feature version="${project.version}">vista-common</feature>
-    
-    <bundle>mvn:org.osehra.vista.camel/vista-api/${project.version}</bundle>
-    <bundle>mvn:org.osehra.vista.camel/vista-rpc/${project.version}</bundle>
-  </feature>
+    <feature version="${camel.version}">camel-netty</feature>
 
-  <feature name='vista-camel' version='${project.version}' resolver='(obr)'>
-    <feature version="${project.version}">vista-rpc</feature>
-    
+    <bundle dependency='true'>mvn:io.netty/netty/${netty.version}</bundle>
+
+    <bundle>mvn:org.osehra.vista.camel/vista-rpc/${project.version}</bundle>
     <bundle>mvn:org.osehra.vista.camel/vista-camel/${project.version}</bundle>
   </feature>
-
+        
 </features>
 

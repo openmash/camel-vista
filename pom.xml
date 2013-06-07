@@ -47,6 +47,8 @@
     <build-helper-maven-plugin.version>1.7</build-helper-maven-plugin.version>
     <exec-maven-plugin.version>1.2.1</exec-maven-plugin.version>
     <maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
+
+    <vista.osgi.import.default.version>[$(version;==;$(@)),$(version;+;$(@)))</vista.osgi.import.default.version>
   </properties>
    
   <modules>
@@ -77,6 +79,11 @@
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-core</artifactId>
+        <version>${camel.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-netty</artifactId>
         <version>${camel.version}</version>
       </dependency>
       <dependency>
@@ -139,12 +146,6 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>maven-bundle-plugin</artifactId>
-          <version>${maven-bundle-plugin.version}</version>
-          <extensions>true</extensions>
-        </plugin>
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
           <version>${maven-resources-plugin.version}</version>
@@ -169,6 +170,21 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>${maven-bundle-plugin.version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <excludeDependencies>false</excludeDependencies>
+          <instructions>
+            <_versionpolicy>${vista.osgi.import.default.version}</_versionpolicy>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
 </project>

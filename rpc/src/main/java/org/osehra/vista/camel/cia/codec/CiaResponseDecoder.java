@@ -20,12 +20,9 @@ package org.osehra.vista.camel.cia.codec;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.frame.CorruptedFrameException;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
-
 import org.osehra.vista.camel.cia.CiaResponse;
 import org.osehra.vista.camel.rpc.codec.RpcCodecUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,10 +36,10 @@ public class CiaResponseDecoder extends FrameDecoder {
             final Channel channel, final ChannelBuffer buffer) throws Exception {
 
         byte seq = buffer.readByte();
-        if (buffer.readByte() != 0) {
-            throw new CorruptedFrameException("Frame start expected (0x00)");
-        }
-        return new CiaResponse().sequence(seq)
+        byte code = buffer.readByte();
+
+        LOG.info("Received CIA response #{} code={}", seq, code);
+        return new CiaResponse().sequence(seq).code(code)
             .message(buffer.readBytes(buffer.readableBytes()).toString(RpcCodecUtils.DEF_CHARSET));
     }
 

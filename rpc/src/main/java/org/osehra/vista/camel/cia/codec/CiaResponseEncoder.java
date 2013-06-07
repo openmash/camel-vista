@@ -24,14 +24,20 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
 import org.osehra.vista.camel.cia.CiaResponse;
 import org.osehra.vista.camel.rpc.codec.RpcCodecUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class CiaResponseEncoder extends OneToOneEncoder {
+    private final static Logger LOG = LoggerFactory.getLogger(CiaResponseEncoder.class);
 
     @Override
     protected Object encode(ChannelHandlerContext ctx, Channel channel, Object msg) throws Exception {
         if (msg instanceof CiaResponse) {
             CiaResponse response = (CiaResponse)msg;
+            
+            LOG.info("CIA Response #{}", response.getSequence());
+            LOG.info("CIA Response #{}", response.getMessage());
 
             ChannelBuffer cb = ChannelBuffers.dynamicBuffer();
             cb.writeByte(response.getSequence());
