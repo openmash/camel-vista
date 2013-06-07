@@ -37,13 +37,14 @@ public class RpcResponseDecoder extends FrameDecoder {
     @Override
     protected Object decode(final ChannelHandlerContext ctx,
             final Channel channel, final ChannelBuffer buffer) throws Exception {
+
+        RpcResponse response = new RpcResponse();
         int l = framePrefixLen(buffer);
         if (l <= 0) {
-            throw new CorruptedFrameException("Missing frame prefix");
+            return response;    // empty frame
         }
         LOG.trace("Skipping frame buffer of {} bytes", l);
         buffer.skipBytes(l);
-        RpcResponse response = new RpcResponse();
         boolean done = false;
         while (!done) {
             final int eol = findEndOfLine(buffer);
