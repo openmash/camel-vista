@@ -23,22 +23,16 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.osehra.vista.camel.cia.CiaResponse;
 import org.osehra.vista.camel.rpc.codec.RpcCodecUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class CiaResponseDecoder extends FrameDecoder {
 
-    private final static Logger LOG = LoggerFactory.getLogger(CiaResponseDecoder.class);
-
     @Override
-    protected Object decode(final ChannelHandlerContext ctx,
-            final Channel channel, final ChannelBuffer buffer) throws Exception {
+    protected Object decode(final ChannelHandlerContext ctx, final Channel channel, final ChannelBuffer buffer) throws Exception {
 
         byte seq = buffer.readByte();
         byte code = buffer.readByte();
 
-        LOG.info("Received CIA response #{} code={}", seq, code);
         return new CiaResponse().sequence(seq).code(code)
             .message(buffer.readBytes(buffer.readableBytes()).toString(RpcCodecUtils.DEF_CHARSET));
     }

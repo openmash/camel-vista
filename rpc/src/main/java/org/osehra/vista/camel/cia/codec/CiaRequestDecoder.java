@@ -44,14 +44,11 @@ public class CiaRequestDecoder extends FrameDecoder {
             throw new CorruptedFrameException("Invalid CIA frame (too short)");
         }
         String hdr = buffer.readBytes(CIA_HEADER.length()).toString(RpcCodecUtils.DEF_CHARSET);
-        LOG.debug("Received header: {}", hdr);
         if (!CIA_HEADER.equals(hdr) || buffer.readByte() != (byte)0xff) { // TODO: add constant
             throw new CorruptedFrameException("Invalid CIA frame (bad header)");
         }
         byte seq = buffer.readByte();
-        LOG.debug("Received byte: '{}'", seq);
         byte type = buffer.readByte();
-        LOG.debug("Received byte: '{}'", type);
 
         Map<String, String> params = CiaCodecUtils.decodeRequestParams(buffer);
         if (params == null) {
