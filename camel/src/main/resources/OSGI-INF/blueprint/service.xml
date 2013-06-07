@@ -33,6 +33,12 @@
   <!-- blueprint property placeholder -->
   <cm:property-placeholder persistent-id="org.osehra.vista" />
 
+  <bean id="rpc-in" class="org.osehra.vista.camel.proxy.RpcServerPipelineFactory">
+    <argument><null /></argument>
+  </bean>
+  <bean id="rpc-out" class="org.osehra.vista.camel.proxy.RpcClientPipelineFactory">
+    <argument><null /></argument>
+  </bean>
   <bean id="cia-in" class="org.osehra.vista.camel.proxy.CiaServerPipelineFactory">
     <argument><null /></argument>
   </bean>
@@ -42,6 +48,15 @@
 
   <!-- Camel processing rules -->
   <camelContext id="openmash" xmlns="http://camel.apache.org/schema/blueprint">
+
+    <route id="camel-rpc">
+      <from uri="netty:tcp://0.0.0.0:{{vistarpc.local}}?serverPipelineFactory=#rpc-in&amp;sync=true" />
+      <to uri="log:org.osehra.vista.camel.proxy?level=INFO" />
+      <threads poolSize="4" maxPoolSize="8">
+        <to uri="netty:tcp://{{vista.host}}:{{vistarpc.remote}}?clientPipelineFactory=#rpc-out&amp;sync=true" />
+      </threads>
+      <to uri="log:org.osehra.vista.camel.proxy?level=INFO" />
+    </route>
 
     <route id="camel-cia">
       <from uri="netty:tcp://0.0.0.0:{{vistacia.local}}?serverPipelineFactory=#cia-in&amp;sync=true" />

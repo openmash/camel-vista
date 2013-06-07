@@ -74,10 +74,10 @@ public class VistaClientMain implements Runnable {
             ChannelFuture connectFuture = bootstrap.connect(new InetSocketAddress(host, port));
             Channel channel = connectFuture.awaitUninterruptibly().getChannel();
 
-            response = channel.write(RpcCommandsSupport.connect("192.169.1.100", "vista.example.org"));
+            response = channel.write(RpcCommandsSupport.connect("192.168.1.100", "vista.example.org"));
             response.awaitUninterruptibly();
             Thread.sleep(3000);
-
+/*
             response = channel.write(RpcCommandsSupport.signonSetup());
             response.awaitUninterruptibly();
             Thread.sleep(5000);
@@ -96,7 +96,7 @@ public class VistaClientMain implements Runnable {
                     .parameter(RpcCommandsSupport.literal("100708")));
             response.awaitUninterruptibly();
             Thread.sleep(5000);
-
+*/
             response = channel.write(RpcCommandsSupport.disconnect());
             response.awaitUninterruptibly();
             Thread.sleep(1000);

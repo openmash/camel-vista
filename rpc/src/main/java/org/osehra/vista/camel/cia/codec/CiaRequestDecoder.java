@@ -37,12 +37,16 @@ public class CiaRequestDecoder extends FrameDecoder {
     private final static String CIA_HEADER = "{CIA}";
 
     @Override
-    protected Object decode(final ChannelHandlerContext ctx,
-            final Channel channel, final ChannelBuffer buffer) throws Exception {
+    protected Object decode(final ChannelHandlerContext ctx, final Channel channel, final ChannelBuffer buffer) throws Exception {
 
         if (buffer.readableBytes() < MIN_FRAME_LEN) {
-            throw new CorruptedFrameException("Invalid CIA frame (too short)");
+            // wait for more data
+            return null;
         }
+
+        // TODO: improve frame decoding when not enough bytes
+        buffer.markReaderIndex();
+
         String hdr = buffer.readBytes(CIA_HEADER.length()).toString(RpcCodecUtils.DEF_CHARSET);
         if (!CIA_HEADER.equals(hdr) || buffer.readByte() != (byte)0xff) { // TODO: add constant
             throw new CorruptedFrameException("Invalid CIA frame (bad header)");

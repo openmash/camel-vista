@@ -181,7 +181,9 @@ public final class RpcCodecUtils {
     
     public static String decodeField(ChannelBuffer in, int len) {
         int count = Integer.parseInt(in.readBytes(len).toString(RpcCodecUtils.DEF_CHARSET));
-        return in.readBytes(count).toString(RpcCodecUtils.DEF_CHARSET);
+        String value = in.readBytes(count).toString(RpcCodecUtils.DEF_CHARSET);
+        LOG.info("RPC parameter of len {}: {}", count, value);
+        return value;
     }
 
 

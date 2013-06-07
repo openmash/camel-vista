@@ -116,7 +116,7 @@ public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State>
             boolean eoframe = false;
             while (!eoframe) {
                 Parameter param = RpcCodecUtils.decodeParameter(buffer);
-                eoframe = param != null;
+                eoframe = param == null;
                 if (!eoframe) {
                     params.add(param);
                 }
@@ -129,7 +129,9 @@ public class RpcRequestDecoder extends ReplayingDecoder<RpcRequestDecoder.State>
         }
 
         ctx.getPipeline().remove(this);
-        return new RpcRequest().name(name);
+        RpcRequest request = new RpcRequest().namespace(namespace).code(code).name(name).version(version);
+        request.getParmeters().addAll(params);
+        return request;
     }
 
     enum State {
