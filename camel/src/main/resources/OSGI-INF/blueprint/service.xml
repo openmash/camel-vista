@@ -47,8 +47,17 @@
   </bean>
 
   <!-- Camel processing rules -->
-  <camelContext id="camel" xmlns="http://camel.apache.org/schema/blueprint">
-    <package>org.osehra.vista.camel.proxy</package>
+  <camelContext id="openmash" xmlns="http://camel.apache.org/schema/blueprint">
+
+    <route id="camel-cia">
+      <from uri="netty:tcp://localhost:9220?serverPipelineFactory=#cia-in&amp;sync=true" />
+      <to uri="log:org.osehra.vista.camel.proxy?level=INFO" />
+      <threads poolSize="4" maxPoolSize="8">
+        <!-- send from a different thread to prevent deadlock on buffer sync -->
+        <to uri="netty:tcp://54.236.116.134:11960?clientPipelineFactory=#cia-out&amp;sync=true" />
+      </threads>
+      <to uri="log:org.osehra.vista.camel.proxy?level=INFO" />
+    </route>
 
   </camelContext>
 

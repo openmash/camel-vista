@@ -48,7 +48,6 @@ public class CiaServerPipelineFactory extends ServerPipelineFactory {
 
     @Override
     public ServerPipelineFactory createPipelineFactory(NettyConsumer consumer) {
-        // TODO Auto-generated method stub
         return new CiaServerPipelineFactory(consumer);
     }
 

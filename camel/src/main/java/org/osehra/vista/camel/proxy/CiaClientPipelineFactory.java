@@ -19,16 +19,12 @@ package org.osehra.vista.camel.proxy;
 import org.apache.camel.component.netty.ClientPipelineFactory;
 import org.apache.camel.component.netty.NettyProducer;
 import org.apache.camel.component.netty.handlers.ClientChannelHandler;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
 import org.jboss.netty.handler.logging.LoggingHandler;
 import org.jboss.netty.logging.InternalLogLevel;
 import org.osehra.vista.camel.cia.codec.CiaRequestEncoder;
 import org.osehra.vista.camel.cia.codec.CiaResponseDecoder;
-import org.osehra.vista.camel.rpc.RpcConstants;
-import org.osehra.vista.camel.rpc.codec.RpcCodecUtils;
 
 
 public class CiaClientPipelineFactory extends ClientPipelineFactory {
@@ -52,7 +48,6 @@ public class CiaClientPipelineFactory extends ClientPipelineFactory {
 
     @Override
     public ClientPipelineFactory createPipelineFactory(NettyProducer producer) {
-        // TODO Auto-generated method stub
         return new CiaClientPipelineFactory(producer);
     }
 
