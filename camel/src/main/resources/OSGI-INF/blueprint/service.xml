@@ -31,13 +31,7 @@
       http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.0.0.xsd">
 
   <!-- blueprint property placeholder -->
-  <cm:property-placeholder persistent-id="org.osehra.vista.camel">
-    <cm:default-properties>
-      <cm:property name="vista.host" value="localhost" />
-      <cm:property name="vistarpc.port" value="9220" />
-      <cm:property name="vistacia.port" value="9460" />
-    </cm:default-properties>
-  </cm:property-placeholder>
+  <cm:property-placeholder persistent-id="org.osehra.vista" />
 
   <bean id="cia-in" class="org.osehra.vista.camel.proxy.CiaServerPipelineFactory">
     <argument><null /></argument>
@@ -50,11 +44,11 @@
   <camelContext id="openmash" xmlns="http://camel.apache.org/schema/blueprint">
 
     <route id="camel-cia">
-      <from uri="netty:tcp://localhost:9220?serverPipelineFactory=#cia-in&amp;sync=true" />
+      <from uri="netty:tcp://0.0.0.0:{{vistacia.local}}?serverPipelineFactory=#cia-in&amp;sync=true" />
       <to uri="log:org.osehra.vista.camel.proxy?level=INFO" />
       <threads poolSize="4" maxPoolSize="8">
         <!-- send from a different thread to prevent deadlock on buffer sync -->
-        <to uri="netty:tcp://54.236.116.134:11960?clientPipelineFactory=#cia-out&amp;sync=true" />
+        <to uri="netty:tcp://{{vista.host}}:{{vistacia.remote}}?clientPipelineFactory=#cia-out&amp;sync=true" />
       </threads>
       <to uri="log:org.osehra.vista.camel.proxy?level=INFO" />
     </route>
