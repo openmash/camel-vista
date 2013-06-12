@@ -17,13 +17,6 @@
 package org.osehra.vista.camel.cia.codec;
 
 import org.osehra.vista.camel.cia.CiaRequest;
-import org.osehra.vista.camel.rpc.EmptyParameter;
-import org.osehra.vista.camel.rpc.GlobalParameter;
-import org.osehra.vista.camel.rpc.LiteralParameter;
-import org.osehra.vista.camel.rpc.Parameter;
-import org.osehra.vista.camel.rpc.ReferenceParameter;
-import org.osehra.vista.camel.rpc.RpcConstants;
-import org.osehra.vista.camel.rpc.RpcRequest;
 
 
 public class CiaCommandsSupport {

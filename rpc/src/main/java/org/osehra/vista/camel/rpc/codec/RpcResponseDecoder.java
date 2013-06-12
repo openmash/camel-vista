@@ -22,7 +22,6 @@ import java.util.List;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.frame.CorruptedFrameException;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.osehra.vista.camel.rpc.RpcConstants;
 import org.osehra.vista.camel.rpc.RpcResponse;

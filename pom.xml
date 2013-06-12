@@ -57,6 +57,7 @@
    
   <modules>
     <module>rpc</module>
+    <module>cia</module>
     <module>camel</module>
     <module>features</module>
     <module>war</module>
@@ -67,6 +68,11 @@
       <dependency>
         <groupId>org.osehra.vista.camel</groupId>
         <artifactId>vista-rpc</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osehra.vista.camel</groupId>
+        <artifactId>vista-cia</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

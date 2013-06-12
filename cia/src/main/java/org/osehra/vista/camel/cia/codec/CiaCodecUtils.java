@@ -16,20 +16,15 @@
 
 package org.osehra.vista.camel.cia.codec;
 
-import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.handler.codec.frame.CorruptedFrameException;
-
 import org.osehra.vista.camel.cia.CiaRequest;
 import org.osehra.vista.camel.rpc.codec.RpcCodecUtils;
 import org.slf4j.Logger;

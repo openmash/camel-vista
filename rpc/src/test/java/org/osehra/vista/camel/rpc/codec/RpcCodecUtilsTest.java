@@ -17,16 +17,13 @@
 package org.osehra.vista.camel.rpc.codec;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.osehra.vista.camel.cia.codec.CiaCodecUtils;
+
 import org.osehra.vista.camel.rpc.RpcConstants;
 
 
@@ -63,6 +60,8 @@ public class RpcCodecUtilsTest {
 
     @Test
     public void testCiaLengthEncoding() {
+        // TODO: move test to the vista-cia project
+        /*
         int[] values = { 10, 100, 1000, 10000, 100000, 1000000 };
         for (int value : values) {
             ChannelBuffer b = ChannelBuffers.dynamicBuffer();
@@ -73,6 +72,7 @@ public class RpcCodecUtilsTest {
             byte len = b.readByte();
             Assert.assertEquals(value, CiaCodecUtils.decodeLen(b, len));
         }
+        */
     }
 
 }
