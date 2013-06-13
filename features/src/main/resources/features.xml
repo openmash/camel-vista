@@ -28,6 +28,7 @@
     <bundle dependency='true'>mvn:io.netty/netty/${netty.version}</bundle>
 
     <bundle>mvn:org.osehra.vista.camel/vista-rpc/${project.version}</bundle>
+    <bundle>mvn:org.osehra.vista.camel/vista-cia/${project.version}</bundle>
     <bundle>mvn:org.osehra.vista.camel/vista-camel/${project.version}</bundle>
   </feature>
         

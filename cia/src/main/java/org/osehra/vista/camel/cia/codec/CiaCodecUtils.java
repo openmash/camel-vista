@@ -27,12 +27,9 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.osehra.vista.camel.cia.CiaRequest;
 import org.osehra.vista.camel.rpc.codec.RpcCodecUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public final class CiaCodecUtils {
-    private static final Logger LOG = LoggerFactory.getLogger(CiaCodecUtils.class);
     public static final Charset DEF_CHARSET = Charset.forName("UTF-8");
     public static final byte EOD = (byte)0xff;
     private static byte sequence = 0;
