@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.osehra.vista.camel</groupId>
     <artifactId>parent</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>vista-cia</artifactId>
@@ -36,10 +36,6 @@
       <dependency>
         <groupId>org.osehra.vista.camel</groupId>
         <artifactId>vista-rpc</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.osehra.vista.camel</groupId>
-        <artifactId>vista-cia</artifactId>
       </dependency>
 
       <dependency>
